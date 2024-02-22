@@ -11,13 +11,14 @@ services:
       - media:/backend/media
       - tmp_file:/backend/filepond-temp-uploads
     environment:
-      ADMIN_USERNAME: "${ADMIN_USERNAME}"
-      ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
-      ADMIN_EMAIL: ${ADMIN_EMAIL}
-      CELERY_BROKER_URL: "amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq"
-      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable"
+      ADMIN_USERNAME: "admin"
+      ADMIN_PASSWORD: "DoccanoAix"
+      ADMIN_EMAIL: "giacomo.blanco@linksfoundation.com"
+      CELERY_BROKER_URL: "amqp://doccano:doccano@rabbitmq"
+      DATABASE_URL: "postgres://doccano:doccano@postgres:5432/doccano?sslmode=disable"
       ALLOW_SIGNUP: "False"
       DEBUG: "False"
+      CSRF_TRUSTED_ORIGINS: "http://localhost:3001"
       DJANGO_SETTINGS_MODULE: "config.settings.production"
     depends_on:
       - postgres
@@ -36,8 +37,8 @@ services:
     entrypoint: ["/opt/bin/prod-celery.sh"]
     environment:
       PYTHONUNBUFFERED: "1"
-      CELERY_BROKER_URL: "amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq"
-      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable"
+      CELERY_BROKER_URL: "amqp://doccano:doccano@rabbitmq"
+      DATABASE_URL: "postgres://doccano:doccano@postgres:5432/doccano?sslmode=disable"
       DJANGO_SETTINGS_MODULE: "config.settings.production"
     depends_on:
       - postgres
@@ -48,10 +49,10 @@ services:
   rabbitmq:
     image: rabbitmq:3.8-alpine
     environment:
-      RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
-      RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
+      RABBITMQ_DEFAULT_USER: "doccano"
+      RABBITMQ_DEFAULT_PASS: "doccano"
     ports:
-      - 5672:5672
+      - 15672:5672
     networks:
       - network-backend
 
@@ -66,7 +67,7 @@ services:
       - static_volume:/static
       - media:/media
     ports:
-      - 80:8080
+      - 127.0.0.1:3001:8080
     depends_on:
       - backend
     networks:
@@ -77,9 +78,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "doccano"
+      POSTGRES_PASSWORD: "doccano"
+      POSTGRES_DB: "doccano"
     networks:
       - network-backend
 

@@ -37,7 +37,7 @@ export default {
     return {
       myFiles: [],
       server: {
-        url: '/v1/fp',
+        url: '/doccano/v1/fp',
         headers: {
           'X-CSRFToken': Cookies.get('csrftoken'),
         },
